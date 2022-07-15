@@ -23,10 +23,10 @@ type Client struct {
 	config     *weatherKitConfig
 }
 
-func NewClient(httpClient *http.Client, config weatherKitConfig) *Client {
+func NewClient(httpClient *http.Client, config *weatherKitConfig) *Client {
 	return &Client{
 		httpClient: httpClient,
-		config:     &config,
+		config:     config,
 	}
 }
 
@@ -44,7 +44,14 @@ func (c *Client) NewRequest(ctx context.Context, method, url string) (*http.Requ
 	if err != nil {
 		return nil, fmt.Errorf("failed to create HTTP request: %w", err)
 	}
-	token := c.createJwt(*c.config)
+
+	var token string
+	if c.config.Token != nil {
+		token = *c.config.Token
+	} else {
+		token = c.createJwt()
+	}
+
 	req.Header.Add("Authorization", "Bearer "+token)
 
 	req = req.WithContext(ctx)
@@ -81,23 +88,23 @@ func (c *Client) DoRequest(r *http.Request, v interface{}) error {
 	return nil
 }
 
-func (c *Client) loadPrivateKey(keyPath string) *ecdsa.PrivateKey {
+func (c *Client) loadPrivateKey() *ecdsa.PrivateKey {
 	// Read, decode, and parse the private key
-	fileBytes, _ := ioutil.ReadFile(keyPath)
+	fileBytes, _ := ioutil.ReadFile(*c.config.PrivateKeyPath)
 	x509Encoded, _ := pem.Decode(fileBytes)
 	parsedKey, _ := x509.ParsePKCS8PrivateKey(x509Encoded.Bytes)
 	ecdsaPrivateKey, _ := parsedKey.(*ecdsa.PrivateKey)
 	return ecdsaPrivateKey
 }
 
-func (c *Client) createJwt(config weatherKitConfig) string {
+func (c *Client) createJwt() string {
 
 	// Define standard claims
 	claims := jwt.StandardClaims{
-		Issuer:    *config.TeamId,
+		Issuer:    *c.config.TeamId,
 		IssuedAt:  time.Now().UTC().Unix(),
 		ExpiresAt: time.Now().Add(time.Minute * 5).UTC().Unix(),
-		Subject:   *config.ServiceId,
+		Subject:   *c.config.ServiceId,
 	}
 
 	// Create the JWT
@@ -106,12 +113,12 @@ func (c *Client) createJwt(config weatherKitConfig) string {
 	// Add header information
 	token.Header = map[string]interface{}{
 		"alg": "ES256",
-		"kid": config.KeyId,
+		"kid": c.config.KeyId,
 		"id":  claims.Issuer + "." + claims.Subject,
 	}
 
 	// Sign and get the complete encoded token as a string using the secret
-	ecdsaPrivateKey := c.loadPrivateKey(*config.PrivateKeyPath)
+	ecdsaPrivateKey := c.loadPrivateKey()
 	tokenString, _ := token.SignedString(ecdsaPrivateKey)
 
 	return tokenString
