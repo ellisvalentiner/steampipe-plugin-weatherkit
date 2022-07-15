@@ -63,7 +63,7 @@ func (c *Client) DoRequest(r *http.Request, v interface{}) error {
 	defer func(Body io.ReadCloser) {
 		err := Body.Close()
 		if err != nil {
-
+			return
 		}
 	}(resp.Body)
 
