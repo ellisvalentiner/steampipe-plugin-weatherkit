@@ -10,6 +10,7 @@ type weatherKitConfig struct {
 	ServiceId      *string `cty:"service_id"`
 	TeamId         *string `cty:"team_id"`
 	PrivateKeyPath *string `cty:"private_key_path"`
+	Token          *string `cty:"token"`
 }
 
 var ConfigSchema = map[string]*schema.Attribute{
@@ -23,6 +24,9 @@ var ConfigSchema = map[string]*schema.Attribute{
 		Type: schema.TypeString,
 	},
 	"private_key_path": {
+		Type: schema.TypeString,
+	},
+	"token": {
 		Type: schema.TypeString,
 	},
 }

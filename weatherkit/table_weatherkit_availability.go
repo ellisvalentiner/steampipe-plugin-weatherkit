@@ -18,13 +18,13 @@ func tableWeatherKitAvailability() *plugin.Table {
 		Columns: []*plugin.Column{
 			{
 				Name:        "latitude",
-				Type:        proto.ColumnType_DOUBLE,
+				Type:        proto.ColumnType_STRING,
 				Description: "A numeric value indicating the latitude of the coordinate between -90 and 90.",
 				Transform:   transform.FromQual("latitude"),
 			},
 			{
 				Name:        "longitude",
-				Type:        proto.ColumnType_DOUBLE,
+				Type:        proto.ColumnType_STRING,
 				Description: "A numeric value indicating the longitude of the coordinate between -180 and 180.",
 				Transform:   transform.FromQual("longitude"),
 			},

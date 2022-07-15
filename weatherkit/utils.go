@@ -22,12 +22,12 @@ func connect(_ context.Context, d *plugin.QueryData) (*Client, error) {
 
 	// Prefer config options given in Steampipe
 	weatherKitConfig := GetConfig(d.Connection)
-	if weatherKitConfig.KeyId == nil || weatherKitConfig.ServiceId == nil || weatherKitConfig.TeamId == nil || weatherKitConfig.PrivateKeyPath == nil {
+	if (weatherKitConfig.KeyId == nil || weatherKitConfig.ServiceId == nil || weatherKitConfig.TeamId == nil || weatherKitConfig.PrivateKeyPath == nil) && (weatherKitConfig.Token == nil) {
 		return nil, errors.New("invalid configuration from ~/.steampipe/config/weatherkit.spc")
 	}
 
 	// Make a new client that can hold the JWT
-	client := NewClient(http.DefaultClient, weatherKitConfig)
+	client := NewClient(http.DefaultClient, &weatherKitConfig)
 
 	// Save to cache
 	d.ConnectionManager.Cache.Set(cacheKey, client)
