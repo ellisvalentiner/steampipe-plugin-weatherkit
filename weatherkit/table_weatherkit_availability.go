@@ -39,14 +39,14 @@ func tableWeatherKitAvailability() *plugin.Table {
 
 func listAvailability(ctx context.Context, d *plugin.QueryData, _ *plugin.HydrateData) (interface{}, error) {
 	logger := plugin.Logger(ctx)
-	service, err := connect(ctx, d)
-	if err != nil {
-		logger.Error("Invalid credentials.")
-		return nil, err
-	}
+	service, _ := connect(ctx, d)
 	latitude := d.KeyColumnQuals["latitude"].GetStringValue()
 	longitude := d.KeyColumnQuals["longitude"].GetStringValue()
-	dataSet, _ := service.Availability(ctx, latitude, longitude)
+	dataSet, err := service.Availability(ctx, latitude, longitude)
+	if err != nil {
+		logger.Error("listAvailability", "got error", err)
+		return nil, err
+	}
 
 	type Row struct {
 		DataSet string `json:"dataSet,omitempty"`
