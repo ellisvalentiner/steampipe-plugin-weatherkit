@@ -39,9 +39,6 @@ func connect(ctx context.Context, d *plugin.QueryData) (*Client, error) {
 
 	// If any fields are missing and a token is not supplied
 	if len(missingFields) > 0 && weatherKitConfig.Token == nil {
-		for _, field := range missingFields {
-			panic(field)
-		}
 		panic("\nInvalid configuration in ~/.steampipe/config/weatherkit.spc\nThe configuration is missing " +
 			strings.Join(missingFields, ", ") +
 			" and Token is undefined.\nEnsure key_id, service_id, team_id, and private_key_path are all defined or provide a pre-generated JWT")
