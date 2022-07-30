@@ -22,11 +22,14 @@ Get the current temperature and condition:
 
 ```sql
 select
-    as_of,
-    temperature,
-    condition_code
-from weatherkit_current_weather
-where latitude = '42.281' and longitude = '-83.743';
+  as_of,
+  temperature,
+  condition_code
+from
+  weatherkit_current_weather
+where
+  latitude = '42.281'
+  and longitude = '-83.743';
 ```
 
 ```
@@ -41,12 +44,16 @@ Get the precipitation forecast:
 
 ```sql
 select
-    forecast_start::date as forecast_date,
-    precipitation_chance,
-    precipitation_amount
-from weatherkit_daily_forecast
-where latitude='42.281' and longitude='-83.743'
-order by forecast_date;
+  forecast_start::date as forecast_date,
+  precipitation_chance,
+  precipitation_amount
+from
+  weatherkit_daily_forecast
+where
+  latitude='42.281'
+  and longitude='-83.743'
+order by
+  forecast_date;
 ```
 
 ```
@@ -95,29 +102,36 @@ connection "weatherkit" {
     plugin    = "ellisvalentiner/weatherkit"
 
     # WeatherKit requires authorization using a signed developer token
+    # You must either provide the information to generate a signed JSON web token (JWT) or supply a pre-generated JWT.
     # See the Apple Developer documentation
     # https://developer.apple.com/documentation/weatherkitrestapi/request_authentication_for_weatherkit_rest_api
 
+    # Option 1: Generate an JWT
     # The 10-character key identifier from your developer account.
-    # key_id = "1234567890"
+    # key_id = "STJY7HX969"
 
     # The service identifier.
-    # service_id = "com.example.weatherkit-client"
+    # service_id = "com.ellisvalentiner.weatherkit-client"
 
     # The Apple Developer Program (ADP) team identifier.
-    # team_id = "0987654321"
+    # team_id = "JS4JVS2JBT"
 
     # Path to your private key for signing the JWT.
-    # private_key_path = "~/.auth/AuthKey_1234567890.p8"
+    # private_key_path = "~/.auth/AuthKey_STJY7HX969.p8"
+
+    # Option 2: Use a pre-generated JWT
+    # token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
 }
+
 ```
 
 - `key_id` - The 10-character key identifier from your developer account.
 - `service_id` - The service identifier.
 - `team_id` - The Apple Developer Program (ADP) team identifier.
 - `private_key_path` - Path to your private key for signing the JWT.
+- `token` - Pre-generated JWT (optional).
 
 ## Get involved
 
 - Open source: https://github.com/ellisvalentiner/steampipe-plugin-weatherkit
-- Community: [Slack Channel](https://join.slack.com/t/steampipe/shared_invite/zt-oij778tv-lYyRTWOTMQYBVAbtPSWs3g)
+- Community: [Slack Channel](https://steampipe.io/community/join)

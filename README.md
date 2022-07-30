@@ -13,24 +13,31 @@ steampipe plugin install ellisvalentiner/weatherkit
 Get the current temperature and condition:
 
 ```sql
-select as_of,
-       temperature,
-       condition_code
-from weatherkit_current_weather
-where latitude = '42.281'
+select
+  as_of,
+  temperature,
+  condition_code
+from
+  weatherkit_current_weather
+where
+  latitude = '42.281'
   and longitude = '-83.743';
 ```
 
 Get the precipitation forecast:
 
 ```sql
-select forecast_start::date as forecast_date,
-       precipitation_chance,
-       precipitation_amount
-from weatherkit_daily_forecast
-where latitude = '42.281'
+select
+  forecast_start::date as forecast_date,
+  precipitation_chance,
+  precipitation_amount
+from
+  weatherkit_daily_forecast
+where
+  latitude = '42.281'
   and longitude = '-83.743'
-order by forecast_date;
+order by
+  forecast_date;
 ```
 
 ## Developing
