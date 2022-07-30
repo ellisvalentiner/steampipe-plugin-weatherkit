@@ -22,11 +22,14 @@ Get the current temperature and condition:
 
 ```sql
 select
-    as_of,
-    temperature,
-    condition_code
-from weatherkit_current_weather
-where latitude = '42.281' and longitude = '-83.743';
+  as_of,
+  temperature,
+  condition_code
+from
+  weatherkit_current_weather
+where
+  latitude = '42.281'
+  and longitude = '-83.743';
 ```
 
 ```
@@ -41,12 +44,16 @@ Get the precipitation forecast:
 
 ```sql
 select
-    forecast_start::date as forecast_date,
-    precipitation_chance,
-    precipitation_amount
-from weatherkit_daily_forecast
-where latitude='42.281' and longitude='-83.743'
-order by forecast_date;
+  forecast_start::date as forecast_date,
+  precipitation_chance,
+  precipitation_amount
+from
+  weatherkit_daily_forecast
+where
+  latitude='42.281'
+  and longitude='-83.743'
+order by
+  forecast_date;
 ```
 
 ```
@@ -122,6 +129,7 @@ connection "weatherkit" {
 - `service_id` - The service identifier.
 - `team_id` - The Apple Developer Program (ADP) team identifier.
 - `private_key_path` - Path to your private key for signing the JWT.
+- `token` - Pre-generated JWT (optional).
 
 ## Get involved
 
