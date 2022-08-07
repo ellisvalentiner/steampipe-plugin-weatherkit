@@ -1,6 +1,7 @@
 package weatherkit
 
 import (
+	"os"
 	"context"
 	"github.com/turbot/steampipe-plugin-sdk/v3/plugin"
 	"net/http"
@@ -20,21 +21,45 @@ func connect(ctx context.Context, d *plugin.QueryData) (*Client, error) {
 		return cachedData.(*Client), nil
 	}
 
+	keyId := os.Getenv("WEATHERKIT_KEY_ID")
+	serviceId := os.Getenv("WEATHERKIT_SERVICE_ID")
+	teamId := os.Getenv("WEATHERKIT_TEAM_ID")
+	privateKeyPath := os.Getenv("WEATHERKIT_PRIVATE_KEY")
+	token := os.Getenv("WEATHERKIT_TOKEN")
+
 	// Prefer config options given in Steampipe
 	weatherKitConfig := GetConfig(d.Connection)
-
 	var missingFields []string
 	if weatherKitConfig.KeyId == nil {
-		missingFields = append(missingFields, "key_id")
+		if keyId != "" {
+			weatherKitConfig.KeyId = &keyId
+		} else {
+			missingFields = append(missingFields, "key_id")
+		}
 	}
 	if weatherKitConfig.ServiceId == nil {
-		missingFields = append(missingFields, "service_id")
+		if serviceId != "" {
+			weatherKitConfig.ServiceId = &serviceId
+		} else {
+			missingFields = append(missingFields, "service_id")
+		}
 	}
 	if weatherKitConfig.TeamId == nil {
-		missingFields = append(missingFields, "team_id")
+		if teamId != "" {
+			weatherKitConfig.TeamId = &teamId
+		} else {
+			missingFields = append(missingFields, "team_id")
+		}
 	}
 	if weatherKitConfig.PrivateKeyPath == nil {
-		missingFields = append(missingFields, "private_key_path")
+		if privateKeyPath != "" {
+			weatherKitConfig.PrivateKeyPath = &privateKeyPath
+		} else {
+			missingFields = append(missingFields, "private_key_path")
+		}
+	}
+	if weatherKitConfig.Token == nil && token != "" {
+		weatherKitConfig.Token = &token
 	}
 
 	// If any fields are missing and a token is not supplied
