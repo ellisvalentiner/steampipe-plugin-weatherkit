@@ -10,7 +10,11 @@ The `weatherkit_availability` table can be used to query information about the d
 ### List available data sets for Ann Arbor, MI
 
 ```sql
-select *
-from weatherkit_availability
-where latitude='42.281' and longitude='-83.743';
+select
+  *
+from
+  weatherkit_availability
+where
+  latitude='42.281'
+  and longitude='-83.743';
 ```
