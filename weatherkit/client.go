@@ -162,87 +162,7 @@ func (c *Client) Availability(ctx context.Context, latitude string, longitude st
 	return dataSet, nil
 }
 
-func (c *Client) CurrentWeather(ctx context.Context, latitude string, longitude string) (Weather, error) {
-	requestUrl := url.URL{
-		Scheme: "https",
-		Host:   baseUrl,
-		Path:   strings.Join([]string{"api", "v1", "weather", language, latitude, longitude}, "/"),
-	}
-	u := requestUrl.Query()
-	u.Set("dataSets", "currentWeather")
-	requestUrl.RawQuery = u.Encode()
-
-	//Response object
-	var weather Weather
-
-	err := c.Get(ctx, requestUrl.String(), &weather)
-	if err != nil {
-		log.Fatalf("Request failed: [%s]", err)
-	}
-	return weather, nil
-}
-
-func (c *Client) DailyForecast(ctx context.Context, latitude string, longitude string) (Weather, error) {
-	requestUrl := url.URL{
-		Scheme: "https",
-		Host:   baseUrl,
-		Path:   strings.Join([]string{"api", "v1", "weather", language, latitude, longitude}, "/"),
-	}
-	u := requestUrl.Query()
-	u.Set("dataSets", "forecastDaily")
-	requestUrl.RawQuery = u.Encode()
-
-	//Response object
-	var weather Weather
-
-	err := c.Get(ctx, requestUrl.String(), &weather)
-	if err != nil {
-		log.Fatalf("Request failed: [%s]", err)
-	}
-	return weather, nil
-}
-
-func (c *Client) HourlyForecast(ctx context.Context, latitude string, longitude string) (Weather, error) {
-	requestUrl := url.URL{
-		Scheme: "https",
-		Host:   baseUrl,
-		Path:   strings.Join([]string{"api", "v1", "weather", language, latitude, longitude}, "/"),
-	}
-	u := requestUrl.Query()
-	u.Set("dataSets", "forecastHourly")
-	requestUrl.RawQuery = u.Encode()
-
-	//Response object
-	var weather Weather
-
-	err := c.Get(ctx, requestUrl.String(), &weather)
-	if err != nil {
-		log.Fatalf("Request failed: [%s]", err)
-	}
-	return weather, nil
-}
-
-func (c *Client) NextHourForecast(ctx context.Context, latitude string, longitude string) (Weather, error) {
-	requestUrl := url.URL{
-		Scheme: "https",
-		Host:   baseUrl,
-		Path:   strings.Join([]string{"api", "v1", "weather", language, latitude, longitude}, "/"),
-	}
-	u := requestUrl.Query()
-	u.Set("dataSets", "forecastNextHour")
-	requestUrl.RawQuery = u.Encode()
-
-	//Response object
-	var weather Weather
-
-	err := c.Get(ctx, requestUrl.String(), &weather)
-	if err != nil {
-		log.Fatalf("Request failed: [%s]", err)
-	}
-	return weather, nil
-}
-
-func (c *Client) WeatherAlerts(ctx context.Context, latitude string, longitude string) (Weather, error) {
+func (c *Client) Weather(ctx context.Context, latitude string, longitude string, datasets []string) (Weather, error) {
 	requestUrl := url.URL{
 		Scheme: "https",
 		Host:   baseUrl,
@@ -250,7 +170,7 @@ func (c *Client) WeatherAlerts(ctx context.Context, latitude string, longitude s
 	}
 	u := requestUrl.Query()
 	u.Set("country", "US")
-	u.Set("dataSets", "weatherAlerts")
+	u.Set("dataSets", strings.Join(datasets, ","))
 	requestUrl.RawQuery = u.Encode()
 
 	//Response object
@@ -261,4 +181,24 @@ func (c *Client) WeatherAlerts(ctx context.Context, latitude string, longitude s
 		log.Fatalf("Request failed: [%s]", err)
 	}
 	return weather, nil
+}
+
+func (c *Client) CurrentWeather(ctx context.Context, latitude string, longitude string) (Weather, error) {
+	return c.Weather(ctx, latitude, longitude, []string{"currentWeather"})
+}
+
+func (c *Client) DailyForecast(ctx context.Context, latitude string, longitude string) (Weather, error) {
+	return c.Weather(ctx, latitude, longitude, []string{"forecastDaily"})
+}
+
+func (c *Client) HourlyForecast(ctx context.Context, latitude string, longitude string) (Weather, error) {
+	return c.Weather(ctx, latitude, longitude, []string{"forecastHourly"})
+}
+
+func (c *Client) NextHourForecast(ctx context.Context, latitude string, longitude string) (Weather, error) {
+	return c.Weather(ctx, latitude, longitude, []string{"forecastNextHour"})
+}
+
+func (c *Client) WeatherAlerts(ctx context.Context, latitude string, longitude string) (Weather, error) {
+	return c.Weather(ctx, latitude, longitude, []string{"weatherAlerts"})
 }
