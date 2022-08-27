@@ -134,10 +134,8 @@ func getCurrentWeather(ctx context.Context, d *plugin.QueryData, _ *plugin.Hydra
 	for qual := range d.KeyColumnQuals {
 		logger.Trace("list-quals", "qual", qual)
 	}
-	//latitude, _ := strconv.ParseFloat(d.KeyColumnQuals["latitude"].GetStringValue(), 64)
 	latitude := d.KeyColumnQuals["latitude"].GetDoubleValue()
 	longitude := d.KeyColumnQuals["longitude"].GetDoubleValue()
-	//longitude, _ := strconv.ParseFloat(d.KeyColumnQuals["longitude"].GetStringValue(), 64)
 	weather, _ := service.CurrentWeather(ctx, latitude, longitude)
 	type Row struct {
 		CurrentWeatherData

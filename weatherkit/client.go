@@ -162,11 +162,11 @@ func (c *Client) Availability(ctx context.Context, latitude string, longitude st
 	return dataSet, nil
 }
 
-func (c *Client) CurrentWeather(ctx context.Context, latitude string, longitude string) (Weather, error) {
+func (c *Client) CurrentWeather(ctx context.Context, latitude float64, longitude float64) (Weather, error) {
 	requestUrl := url.URL{
 		Scheme: "https",
 		Host:   baseUrl,
-		Path:   strings.Join([]string{"api", "v1", "weather", language, latitude, longitude}, "/"),
+		Path:   strings.Join([]string{"api", "v1", "weather", language, fmt.Sprintf("%v", latitude), fmt.Sprintf("%v", longitude)}, "/"),
 	}
 	u := requestUrl.Query()
 	u.Set("dataSets", "currentWeather")
