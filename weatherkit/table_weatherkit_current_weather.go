@@ -5,6 +5,7 @@ import (
 	"github.com/turbot/steampipe-plugin-sdk/v3/grpc/proto"
 	"github.com/turbot/steampipe-plugin-sdk/v3/plugin"
 	"github.com/turbot/steampipe-plugin-sdk/v3/plugin/transform"
+	"time"
 )
 
 func tableWeatherKitCurrentWeather() *plugin.Table {
@@ -12,8 +13,13 @@ func tableWeatherKitCurrentWeather() *plugin.Table {
 		Name:        "weatherkit_current_weather",
 		Description: "WeatherKit Current Weather.",
 		Get: &plugin.GetConfig{
-			KeyColumns: plugin.AllColumns([]string{"latitude", "longitude"}),
-			Hydrate:    getCurrentWeather,
+			//KeyColumns: plugin.AllColumns([]string{"latitude", "longitude"}),
+			KeyColumns: []*plugin.KeyColumn{
+				{Name: "latitude"},
+				{Name: "longitude"},
+				{Name: "as_of", Require: plugin.Optional},
+			},
+			Hydrate: getCurrentWeather,
 		},
 		Columns: []*plugin.Column{
 			{
@@ -126,7 +132,11 @@ func getCurrentWeather(ctx context.Context, d *plugin.QueryData, _ *plugin.Hydra
 	}
 	latitude := d.KeyColumnQuals["latitude"].GetStringValue()
 	longitude := d.KeyColumnQuals["longitude"].GetStringValue()
-	weather, _ := service.CurrentWeather(ctx, latitude, longitude)
+	params := make(map[string]string)
+	asOf := d.KeyColumnQuals["as_of"].GetTimestampValue()
+	params["currentAsOf"] = asOf.AsTime().Format(time.RFC3339)
+	logger.Trace("get-current-weather", "params", params)
+	weather, _ := service.CurrentWeather(ctx, latitude, longitude, params)
 	type Row struct {
 		CurrentWeatherData
 		Metadata WeatherMetadata `json:"metadata,omitempty"`

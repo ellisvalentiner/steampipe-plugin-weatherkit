@@ -5,6 +5,7 @@ import (
 	"github.com/turbot/steampipe-plugin-sdk/v3/grpc/proto"
 	"github.com/turbot/steampipe-plugin-sdk/v3/plugin"
 	"github.com/turbot/steampipe-plugin-sdk/v3/plugin/transform"
+	"time"
 )
 
 func tableWeatherKitHourlyForecast() *plugin.Table {
@@ -12,8 +13,13 @@ func tableWeatherKitHourlyForecast() *plugin.Table {
 		Name:        "weatherkit_hourly_forecast",
 		Description: "WeatherKit Hourly Forecast.",
 		List: &plugin.ListConfig{
-			KeyColumns: plugin.AllColumns([]string{"latitude", "longitude"}),
-			Hydrate:    listHourlyForecast,
+			//KeyColumns: plugin.AllColumns([]string{"latitude", "longitude"}),
+			KeyColumns: []*plugin.KeyColumn{
+				{Name: "latitude"},
+				{Name: "longitude"},
+				{Name: "forecast_start", Operators: []string{"<", "<=", ">", ">="}},
+			},
+			Hydrate: listHourlyForecast,
 		},
 		Columns: []*plugin.Column{
 			{
@@ -141,7 +147,12 @@ func listHourlyForecast(ctx context.Context, d *plugin.QueryData, _ *plugin.Hydr
 	}
 	latitude := d.KeyColumnQuals["latitude"].GetStringValue()
 	longitude := d.KeyColumnQuals["longitude"].GetStringValue()
-	weather, _ := service.HourlyForecast(ctx, latitude, longitude)
+	params := make(map[string]string)
+	hourlyStart := d.KeyColumnQuals["forecast_start"].GetTimestampValue()
+	if hourlyStart != nil {
+		params["hourlyStart"] = hourlyStart.AsTime().Format(time.RFC3339)
+	}
+	weather, _ := service.HourlyForecast(ctx, latitude, longitude, params)
 	type Row struct {
 		HourWeatherConditions
 		Metadata WeatherMetadata `json:"metadata,omitempty"`

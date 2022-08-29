@@ -162,7 +162,7 @@ func (c *Client) Availability(ctx context.Context, latitude string, longitude st
 	return dataSet, nil
 }
 
-func (c *Client) Weather(ctx context.Context, latitude string, longitude string, datasets []string) (Weather, error) {
+func (c *Client) Weather(ctx context.Context, latitude string, longitude string, datasets []string, params map[string]string) (Weather, error) {
 	requestUrl := url.URL{
 		Scheme: "https",
 		Host:   baseUrl,
@@ -171,6 +171,9 @@ func (c *Client) Weather(ctx context.Context, latitude string, longitude string,
 	u := requestUrl.Query()
 	u.Set("country", "US")
 	u.Set("dataSets", strings.Join(datasets, ","))
+	for key, value := range params {
+		u.Set(key, value)
+	}
 	requestUrl.RawQuery = u.Encode()
 
 	//Response object
@@ -183,22 +186,24 @@ func (c *Client) Weather(ctx context.Context, latitude string, longitude string,
 	return weather, nil
 }
 
-func (c *Client) CurrentWeather(ctx context.Context, latitude string, longitude string) (Weather, error) {
-	return c.Weather(ctx, latitude, longitude, []string{"currentWeather"})
+func (c *Client) CurrentWeather(ctx context.Context, latitude string, longitude string, params map[string]string) (Weather, error) {
+	return c.Weather(ctx, latitude, longitude, []string{"currentWeather"}, params)
 }
 
-func (c *Client) DailyForecast(ctx context.Context, latitude string, longitude string) (Weather, error) {
-	return c.Weather(ctx, latitude, longitude, []string{"forecastDaily"})
+func (c *Client) DailyForecast(ctx context.Context, latitude string, longitude string, params map[string]string) (Weather, error) {
+	return c.Weather(ctx, latitude, longitude, []string{"forecastDaily"}, params)
 }
 
-func (c *Client) HourlyForecast(ctx context.Context, latitude string, longitude string) (Weather, error) {
-	return c.Weather(ctx, latitude, longitude, []string{"forecastHourly"})
+func (c *Client) HourlyForecast(ctx context.Context, latitude string, longitude string, params map[string]string) (Weather, error) {
+	return c.Weather(ctx, latitude, longitude, []string{"forecastHourly"}, params)
 }
 
 func (c *Client) NextHourForecast(ctx context.Context, latitude string, longitude string) (Weather, error) {
-	return c.Weather(ctx, latitude, longitude, []string{"forecastNextHour"})
+	params := make(map[string]string)
+	return c.Weather(ctx, latitude, longitude, []string{"forecastNextHour"}, params)
 }
 
 func (c *Client) WeatherAlerts(ctx context.Context, latitude string, longitude string) (Weather, error) {
-	return c.Weather(ctx, latitude, longitude, []string{"weatherAlerts"})
+	params := make(map[string]string)
+	return c.Weather(ctx, latitude, longitude, []string{"weatherAlerts"}, params)
 }

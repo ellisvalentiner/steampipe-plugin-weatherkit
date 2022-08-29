@@ -5,6 +5,7 @@ import (
 	"github.com/turbot/steampipe-plugin-sdk/v3/grpc/proto"
 	"github.com/turbot/steampipe-plugin-sdk/v3/plugin"
 	"github.com/turbot/steampipe-plugin-sdk/v3/plugin/transform"
+	"time"
 )
 
 func tableWeatherKitDailyForecast() *plugin.Table {
@@ -12,8 +13,14 @@ func tableWeatherKitDailyForecast() *plugin.Table {
 		Name:        "weatherkit_daily_forecast",
 		Description: "WeatherKit Daily Forecast.",
 		List: &plugin.ListConfig{
-			KeyColumns: plugin.AllColumns([]string{"latitude", "longitude"}),
-			Hydrate:    listDailyForecast,
+			//KeyColumns: plugin.AllColumns([]string{"latitude", "longitude"}),
+			KeyColumns: []*plugin.KeyColumn{
+				{Name: "latitude"},
+				{Name: "longitude"},
+				{Name: "forecast_start", Operators: []string{">=", ">"}, Require: plugin.Optional},
+				{Name: "forecast_end", Operators: []string{"<=", "<"}, Require: plugin.Optional},
+			},
+			Hydrate: listDailyForecast,
 		},
 		Columns: []*plugin.Column{
 			{
@@ -171,7 +178,16 @@ func listDailyForecast(ctx context.Context, d *plugin.QueryData, _ *plugin.Hydra
 	}
 	latitude := d.KeyColumnQuals["latitude"].GetStringValue()
 	longitude := d.KeyColumnQuals["longitude"].GetStringValue()
-	weather, _ := service.DailyForecast(ctx, latitude, longitude)
+	params := make(map[string]string)
+	dailyStart := d.KeyColumnQuals["forecast_start"].GetTimestampValue()
+	dailyEnd := d.KeyColumnQuals["forecast_end"].GetTimestampValue()
+	if dailyStart != nil {
+		params["dailyStart"] = dailyStart.AsTime().Format(time.RFC3339)
+	}
+	if dailyEnd != nil {
+		params["dailyEnd"] = dailyEnd.AsTime().Format(time.RFC3339)
+	}
+	weather, _ := service.DailyForecast(ctx, latitude, longitude, params)
 	type Row struct {
 		DayWeatherConditions
 		WeatherMetadata
