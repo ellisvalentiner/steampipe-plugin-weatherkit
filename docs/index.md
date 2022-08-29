@@ -131,6 +131,24 @@ connection "weatherkit" {
 - `private_key_path` - Path to your private key for signing the JWT.
 - `token` - Pre-generated JWT (optional).
 
+#### Credentials from Environment Variables
+
+The WeatherKit plugin will use the following environment variables, **only if other arguments (`key_id`, `service_id`, `team_id`, `private_key_path`, `token`) are not specified** in the connection:
+
+```shell
+export WEATHERKIT_KEY_ID="STJY7HX969"
+export WEATHERKIT_SERVICE_ID="com.ellisvalentiner.weatherkit-client"
+export WEATHERKIT_TEAM_ID="JS4JVS2JBT"
+export WEATHERKIT_PRIVATE_KEY="~/.auth/AuthKey_STJY7HX969.p8"
+export WEATHERKIT_TOKEN="eyJhbG..."
+```
+
+```hcl
+connection "weatherkit" {
+    plugin    = "ellisvalentiner/weatherkit"
+}
+```
+
 ## Get involved
 
 - Open source: https://github.com/ellisvalentiner/steampipe-plugin-weatherkit
