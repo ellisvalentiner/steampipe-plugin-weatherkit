@@ -3,11 +3,9 @@
 
 
 <a name="v0.0.1"></a>
-## [v0.0.1] - 0001-01-01
-
-<a name="v0.1.0"></a>
-## v0.1.0 - 2022-08-29
+## v0.0.1 - 2022-08-29
 ### Chore
+- update CHANGELOG and tag for release
 - update CHANGELOG
 
 ### Docs
@@ -41,4 +39,3 @@
 
 
 [Unreleased]: https://github.com/ellisvalentiner/steampipe-plugin-weatherkit/compare/v0.0.1...HEAD
-[v0.0.1]: https://github.com/ellisvalentiner/steampipe-plugin-weatherkit/compare/v0.1.0...v0.0.1
