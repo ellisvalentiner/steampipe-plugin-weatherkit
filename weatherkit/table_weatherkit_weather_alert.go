@@ -18,13 +18,13 @@ func tableWeatherKitWeatherAlert() *plugin.Table {
 		Columns: []*plugin.Column{
 			{
 				Name:        "latitude",
-				Type:        proto.ColumnType_STRING,
+				Type:        proto.ColumnType_DOUBLE,
 				Description: "The latitude of the desired location.",
 				Transform:   transform.FromQual("latitude"),
 			},
 			{
 				Name:        "longitude",
-				Type:        proto.ColumnType_STRING,
+				Type:        proto.ColumnType_DOUBLE,
 				Description: "The longitude of the desired location.",
 				Transform:   transform.FromQual("longitude"),
 			},
@@ -129,8 +129,8 @@ func listWeatherAlert(ctx context.Context, d *plugin.QueryData, _ *plugin.Hydrat
 		logger.Error("Invalid credentials.")
 		return nil, err
 	}
-	latitude := d.KeyColumnQuals["latitude"].GetStringValue()
-	longitude := d.KeyColumnQuals["longitude"].GetStringValue()
+	latitude := d.KeyColumnQuals["latitude"].GetDoubleValue()
+	longitude := d.KeyColumnQuals["longitude"].GetDoubleValue()
 	weather, _ := service.WeatherAlerts(ctx, latitude, longitude)
 	logger.Debug("listWeatherAlert", "weather", weather)
 	type Row struct {

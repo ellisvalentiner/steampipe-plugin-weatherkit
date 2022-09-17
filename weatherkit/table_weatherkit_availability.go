@@ -18,13 +18,13 @@ func tableWeatherKitAvailability() *plugin.Table {
 		Columns: []*plugin.Column{
 			{
 				Name:        "latitude",
-				Type:        proto.ColumnType_STRING,
+				Type:        proto.ColumnType_DOUBLE,
 				Description: "A numeric value indicating the latitude of the coordinate between -90 and 90.",
 				Transform:   transform.FromQual("latitude"),
 			},
 			{
 				Name:        "longitude",
-				Type:        proto.ColumnType_STRING,
+				Type:        proto.ColumnType_DOUBLE,
 				Description: "A numeric value indicating the longitude of the coordinate between -180 and 180.",
 				Transform:   transform.FromQual("longitude"),
 			},
@@ -40,8 +40,8 @@ func tableWeatherKitAvailability() *plugin.Table {
 func listAvailability(ctx context.Context, d *plugin.QueryData, _ *plugin.HydrateData) (interface{}, error) {
 	logger := plugin.Logger(ctx)
 	service, _ := connect(ctx, d)
-	latitude := d.KeyColumnQuals["latitude"].GetStringValue()
-	longitude := d.KeyColumnQuals["longitude"].GetStringValue()
+	latitude := d.KeyColumnQuals["latitude"].GetDoubleValue()
+	longitude := d.KeyColumnQuals["longitude"].GetDoubleValue()
 	dataSet, err := service.Availability(ctx, latitude, longitude)
 	if err != nil {
 		logger.Error("listAvailability", "got error", err)

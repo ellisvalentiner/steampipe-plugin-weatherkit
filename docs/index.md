@@ -28,8 +28,8 @@ select
 from
   weatherkit_current_weather
 where
-  latitude = '42.281'
-  and longitude = '-83.743';
+  latitude = 42.281
+  and longitude = -83.743;
 ```
 
 ```
@@ -50,8 +50,8 @@ select
 from
   weatherkit_daily_forecast
 where
-  latitude='42.281'
-  and longitude='-83.743'
+  latitude=42.281
+  and longitude=-83.743
 order by
   forecast_date;
 ```

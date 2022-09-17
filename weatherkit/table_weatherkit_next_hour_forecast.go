@@ -18,13 +18,13 @@ func tableWeatherKitNextHourForecast() *plugin.Table {
 		Columns: []*plugin.Column{
 			{
 				Name:        "latitude",
-				Type:        proto.ColumnType_STRING,
+				Type:        proto.ColumnType_DOUBLE,
 				Description: "A numeric value indicating the latitude of the coordinate between -90 and 90.",
 				Transform:   transform.FromQual("latitude"),
 			},
 			{
 				Name:        "longitude",
-				Type:        proto.ColumnType_STRING,
+				Type:        proto.ColumnType_DOUBLE,
 				Description: "A numeric value indicating the longitude of the coordinate between -180 and 180.",
 				Transform:   transform.FromQual("longitude"),
 			},
@@ -69,8 +69,8 @@ func listNextHourForecast(ctx context.Context, d *plugin.QueryData, _ *plugin.Hy
 		logger.Error("Invalid credentials.")
 		return nil, err
 	}
-	latitude := d.KeyColumnQuals["latitude"].GetStringValue()
-	longitude := d.KeyColumnQuals["longitude"].GetStringValue()
+	latitude := d.KeyColumnQuals["latitude"].GetDoubleValue()
+	longitude := d.KeyColumnQuals["longitude"].GetDoubleValue()
 	weather, _ := service.NextHourForecast(ctx, latitude, longitude)
 	type Row struct {
 		ForecastMinute

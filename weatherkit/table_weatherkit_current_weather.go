@@ -12,13 +12,11 @@ func weatherKitCurrentWeatherColumns() []*plugin.Column {
 			Name:        "latitude",
 			Type:        proto.ColumnType_DOUBLE,
 			Description: "A numeric value indicating the latitude of the coordinate between -90 and 90.",
-			//Transform:   transform.FromField("Latitude"),
 		},
 		{
 			Name:        "longitude",
 			Type:        proto.ColumnType_DOUBLE,
 			Description: "A numeric value indicating the longitude of the coordinate between -180 and 180.",
-			//Transform:   transform.FromField("Longitude"),
 		},
 		{
 			Name:        "as_of",
