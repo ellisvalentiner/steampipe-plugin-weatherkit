@@ -11,7 +11,7 @@ import (
 	"fmt"
 	"github.com/golang-jwt/jwt"
 	"github.com/hashicorp/go-hclog"
-	"github.com/turbot/steampipe-plugin-sdk/v3/plugin"
+	"github.com/turbot/steampipe-plugin-sdk/v4/plugin"
 	"io"
 	"io/ioutil"
 	"log"
