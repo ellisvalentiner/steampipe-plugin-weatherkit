@@ -13,10 +13,10 @@ import (
 	"github.com/hashicorp/go-hclog"
 	"github.com/turbot/steampipe-plugin-sdk/v4/plugin"
 	"io"
-	"io/ioutil"
 	"log"
 	"net/http"
 	"net/url"
+	"os"
 	"strings"
 	"time"
 )
@@ -92,7 +92,10 @@ func (c *Client) DoRequest(r *http.Request, v interface{}) error {
 	c.checkResponseStatus(resp)
 
 	defer func(Body io.ReadCloser) {
-		Body.Close()
+		err := Body.Close()
+		if err != nil {
+			return
+		}
 	}(resp.Body)
 
 	var buf bytes.Buffer
@@ -108,7 +111,7 @@ func (c *Client) DoRequest(r *http.Request, v interface{}) error {
 
 func (c *Client) loadPrivateKey() *ecdsa.PrivateKey {
 	// Read, decode, and parse the private key
-	fileBytes, _ := ioutil.ReadFile(*c.config.PrivateKeyPath)
+	fileBytes, _ := os.ReadFile(*c.config.PrivateKeyPath)
 	x509Encoded, _ := pem.Decode(fileBytes)
 	parsedKey, _ := x509.ParsePKCS8PrivateKey(x509Encoded.Bytes)
 	ecdsaPrivateKey, _ := parsedKey.(*ecdsa.PrivateKey)
