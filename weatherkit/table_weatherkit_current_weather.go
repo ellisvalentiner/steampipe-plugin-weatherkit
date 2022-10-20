@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/turbot/steampipe-plugin-sdk/v4/grpc/proto"
 	"github.com/turbot/steampipe-plugin-sdk/v4/plugin"
+	"github.com/turbot/steampipe-plugin-sdk/v4/plugin/transform"
 )
 
 func weatherKitCurrentWeatherColumns() []*plugin.Column {
@@ -12,11 +13,13 @@ func weatherKitCurrentWeatherColumns() []*plugin.Column {
 			Name:        "latitude",
 			Type:        proto.ColumnType_DOUBLE,
 			Description: "A numeric value indicating the latitude of the coordinate between -90 and 90.",
+			Transform:   transform.FromQual("latitude"),
 		},
 		{
 			Name:        "longitude",
 			Type:        proto.ColumnType_DOUBLE,
 			Description: "A numeric value indicating the longitude of the coordinate between -180 and 180.",
+			Transform:   transform.FromQual("longitude"),
 		},
 		{
 			Name:        "as_of",
@@ -111,12 +114,8 @@ func tableWeatherKitCurrentWeather() *plugin.Table {
 		Name:        "weatherkit_current_weather",
 		Description: "WeatherKit Current Weather.",
 		Get: &plugin.GetConfig{
-			//KeyColumns: plugin.AllColumns([]string{"latitude", "longitude"}),
-			KeyColumns: []*plugin.KeyColumn{
-				{Name: "latitude", Operators: []string{"="}, Require: plugin.Required},
-				{Name: "longitude", Operators: []string{"="}, Require: plugin.Required},
-			},
-			Hydrate: getCurrentWeather,
+			KeyColumns: plugin.AllColumns([]string{"latitude", "longitude"}),
+			Hydrate:    getCurrentWeather,
 		},
 		Columns: weatherKitCurrentWeatherColumns(),
 	}
@@ -128,9 +127,6 @@ func getCurrentWeather(ctx context.Context, d *plugin.QueryData, _ *plugin.Hydra
 	if err != nil {
 		logger.Error("Invalid credentials.")
 		return nil, err
-	}
-	for qual := range d.KeyColumnQuals {
-		logger.Trace("list-quals", "qual", qual)
 	}
 	latitude := d.KeyColumnQuals["latitude"].GetDoubleValue()
 	longitude := d.KeyColumnQuals["longitude"].GetDoubleValue()
