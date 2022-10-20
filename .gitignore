@@ -21,3 +21,7 @@
 .env
 
 dist/
+
+# Local development
+.chglog
+.idea

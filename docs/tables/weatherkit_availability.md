@@ -15,6 +15,6 @@ select
 from
   weatherkit_availability
 where
-  latitude='42.281'
-  and longitude='-83.743';
+  latitude=42.281
+  and longitude=-83.743;
 ```

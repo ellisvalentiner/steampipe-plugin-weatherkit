@@ -15,8 +15,8 @@ select
 from
   weatherkit_current_weather
 where
-  latitude='42.281'
-  and longitude='-83.743';
+  latitude=42.281
+  and longitude=-83.743;
 ```
 
 ### Get the temperature, humidity, and dew point
@@ -29,8 +29,8 @@ select
 from
   weatherkit_current_weather
 where
-  latitude='42.281'
-  and longitude='-83.743';
+  latitude=42.281
+  and longitude=-83.743;
 ```
 
 ### Get the temperature in degrees Fahrenheit
@@ -41,8 +41,8 @@ select
 from
   weatherkit_current_weather
 where
-  latitude='42.281'
-  and longitude='-83.743';
+  latitude=42.281
+  and longitude=-83.743;
 ```
 
 ### Get the wind direction, gust, and speed
@@ -55,6 +55,6 @@ select
 from
   weatherkit_current_weather
 where
-  latitude='42.281'
-  and longitude='-83.743';
+  latitude=42.281
+  and longitude=-83.743;
 ```

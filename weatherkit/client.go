@@ -145,11 +145,13 @@ func (c *Client) createJwt() string {
 	return tokenString
 }
 
-func (c *Client) Availability(ctx context.Context, latitude string, longitude string) ([]string, error) {
+func (c *Client) Availability(ctx context.Context, latitude float64, longitude float64) ([]string, error) {
+	lat := fmt.Sprintf("%f", latitude)
+	lng := fmt.Sprintf("%f", longitude)
 	requestUrl := url.URL{
 		Scheme: "https",
 		Host:   baseUrl,
-		Path:   strings.Join([]string{"api", "v1", "availability", latitude, longitude}, "/"),
+		Path:   strings.Join([]string{"api", "v1", "availability", lat, lng}, "/"),
 	}
 	u := requestUrl.Query()
 	u.Set("country", "US")
@@ -165,11 +167,13 @@ func (c *Client) Availability(ctx context.Context, latitude string, longitude st
 	return dataSet, nil
 }
 
-func (c *Client) Weather(ctx context.Context, latitude string, longitude string, datasets []string) (Weather, error) {
+func (c *Client) Weather(ctx context.Context, latitude float64, longitude float64, datasets []string) (Weather, error) {
+	lat := fmt.Sprintf("%f", latitude)
+	lng := fmt.Sprintf("%f", longitude)
 	requestUrl := url.URL{
 		Scheme: "https",
 		Host:   baseUrl,
-		Path:   strings.Join([]string{"api", "v1", "weather", language, latitude, longitude}, "/"),
+		Path:   strings.Join([]string{"api", "v1", "weather", language, lat, lng}, "/"),
 	}
 	u := requestUrl.Query()
 	u.Set("country", "US")
@@ -186,22 +190,22 @@ func (c *Client) Weather(ctx context.Context, latitude string, longitude string,
 	return weather, nil
 }
 
-func (c *Client) CurrentWeather(ctx context.Context, latitude string, longitude string) (Weather, error) {
+func (c *Client) CurrentWeather(ctx context.Context, latitude float64, longitude float64) (Weather, error) {
 	return c.Weather(ctx, latitude, longitude, []string{"currentWeather"})
 }
 
-func (c *Client) DailyForecast(ctx context.Context, latitude string, longitude string) (Weather, error) {
+func (c *Client) DailyForecast(ctx context.Context, latitude float64, longitude float64) (Weather, error) {
 	return c.Weather(ctx, latitude, longitude, []string{"forecastDaily"})
 }
 
-func (c *Client) HourlyForecast(ctx context.Context, latitude string, longitude string) (Weather, error) {
+func (c *Client) HourlyForecast(ctx context.Context, latitude float64, longitude float64) (Weather, error) {
 	return c.Weather(ctx, latitude, longitude, []string{"forecastHourly"})
 }
 
-func (c *Client) NextHourForecast(ctx context.Context, latitude string, longitude string) (Weather, error) {
+func (c *Client) NextHourForecast(ctx context.Context, latitude float64, longitude float64) (Weather, error) {
 	return c.Weather(ctx, latitude, longitude, []string{"forecastNextHour"})
 }
 
-func (c *Client) WeatherAlerts(ctx context.Context, latitude string, longitude string) (Weather, error) {
+func (c *Client) WeatherAlerts(ctx context.Context, latitude float64, longitude float64) (Weather, error) {
 	return c.Weather(ctx, latitude, longitude, []string{"weatherAlerts"})
 }

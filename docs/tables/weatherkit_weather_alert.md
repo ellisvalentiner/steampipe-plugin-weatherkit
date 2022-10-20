@@ -15,8 +15,8 @@ select
 from
   weatherkit_weather_alert
 where
-  latitude='42.281'
-  and longitude='-83.743';
+  latitude=42.281
+  and longitude=-83.743;
 ```
 
 ### List weather alert descriptions and expiration times for Austin, TX
@@ -28,6 +28,6 @@ select
 from
   weatherkit_weather_alert
 where
-  latitude = '30.267'
-  and longitude = '-97.743';
+  latitude = 30.267
+  and longitude = -97.743;
 ```

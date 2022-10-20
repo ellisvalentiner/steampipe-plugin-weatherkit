@@ -15,8 +15,8 @@ select
 from
   weatherkit_daily_forecast
 where
-  latitude='42.281'
-  and longitude='-83.743';
+  latitude=42.281
+  and longitude=-83.743;
 ```
 
 ### Get the daily temperature min/max forecast
@@ -29,8 +29,8 @@ select
 from
   weatherkit_daily_forecast
 where
-  latitude='42.281'
-  and longitude='-83.743'
+  latitude=42.281
+  and longitude=-83.743
 order by
   forecast_start;
 ```
@@ -60,8 +60,8 @@ from
     "precipitationType" text
   )
 where
-  latitude='42.281'
-  and longitude='-83.743'
+  latitude=42.281
+  and longitude=-83.743
 order by
   r."forecastStart";
 ```

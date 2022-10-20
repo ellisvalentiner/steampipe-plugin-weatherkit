@@ -15,8 +15,8 @@ select
 from
   weatherkit_next_hour_forecast
 where
-  latitude='42.281'
-  and longitude='-83.743';
+  latitude=42.281
+  and longitude=-83.743;
 ```
 
 ### Get the next hour's precipitation chance & intensity
@@ -29,6 +29,6 @@ select
 from
   weatherkit_next_hour_forecast
 where
-  latitude='42.281'
-  and longitude='-83.743';
+  latitude=42.281
+  and longitude=-83.743;
 ```

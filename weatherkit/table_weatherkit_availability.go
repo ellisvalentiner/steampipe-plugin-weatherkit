@@ -7,6 +7,28 @@ import (
 	"github.com/turbot/steampipe-plugin-sdk/v4/plugin/transform"
 )
 
+func weatherKitAvailabilityColumns() []*plugin.Column {
+	return []*plugin.Column{
+		{
+			Name:        "latitude",
+			Type:        proto.ColumnType_DOUBLE,
+			Description: "A numeric value indicating the latitude of the coordinate between -90 and 90.",
+			Transform:   transform.FromQual("latitude"),
+		},
+		{
+			Name:        "longitude",
+			Type:        proto.ColumnType_DOUBLE,
+			Description: "A numeric value indicating the longitude of the coordinate between -180 and 180.",
+			Transform:   transform.FromQual("longitude"),
+		},
+		{
+			Name:        "data_set",
+			Type:        proto.ColumnType_STRING,
+			Description: "The collection of weather information for a location.",
+		},
+	}
+}
+
 func tableWeatherKitAvailability() *plugin.Table {
 	return &plugin.Table{
 		Name:        "weatherkit_availability",
@@ -15,33 +37,15 @@ func tableWeatherKitAvailability() *plugin.Table {
 			KeyColumns: plugin.AllColumns([]string{"latitude", "longitude"}),
 			Hydrate:    listAvailability,
 		},
-		Columns: []*plugin.Column{
-			{
-				Name:        "latitude",
-				Type:        proto.ColumnType_STRING,
-				Description: "A numeric value indicating the latitude of the coordinate between -90 and 90.",
-				Transform:   transform.FromQual("latitude"),
-			},
-			{
-				Name:        "longitude",
-				Type:        proto.ColumnType_STRING,
-				Description: "A numeric value indicating the longitude of the coordinate between -180 and 180.",
-				Transform:   transform.FromQual("longitude"),
-			},
-			{
-				Name:        "data_set",
-				Type:        proto.ColumnType_STRING,
-				Description: "The collection of weather information for a location.",
-			},
-		},
+		Columns: weatherKitAvailabilityColumns(),
 	}
 }
 
 func listAvailability(ctx context.Context, d *plugin.QueryData, _ *plugin.HydrateData) (interface{}, error) {
 	logger := plugin.Logger(ctx)
 	service, _ := connect(ctx, d)
-	latitude := d.KeyColumnQuals["latitude"].GetStringValue()
-	longitude := d.KeyColumnQuals["longitude"].GetStringValue()
+	latitude := d.KeyColumnQuals["latitude"].GetDoubleValue()
+	longitude := d.KeyColumnQuals["longitude"].GetDoubleValue()
 	dataSet, err := service.Availability(ctx, latitude, longitude)
 	if err != nil {
 		logger.Error("listAvailability", "got error", err)

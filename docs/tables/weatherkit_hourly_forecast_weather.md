@@ -15,8 +15,8 @@ select
 from
   weatherkit_hourly_forecast
 where
-  latitude='42.281'
-  and longitude='-83.743';
+  latitude=42.281
+  and longitude=-83.743;
 ```
 
 ### Get the hourly precipitation forecast
@@ -30,8 +30,8 @@ select
 from
   weatherkit_hourly_forecast
 where
-  latitude = '42.281'
-  and longitude = '-83.743'
+  latitude = 42.281
+  and longitude = -83.743
 order by
   forecast_start;
 ```
@@ -47,8 +47,8 @@ select
 from
   weatherkit_hourly_forecast
 where
-  latitude = '42.281'
-  and longitude = '-83.743'
+  latitude = 42.281
+  and longitude = -83.743
 order by
   forecast_start;
 ```
@@ -62,8 +62,8 @@ select
 from
   weatherkit_hourly_forecast
 where
-  latitude = '42.281'
-  and longitude = '-83.743'
+  latitude = 42.281
+  and longitude = -83.743
 order by
   forecast_start;
 ```
