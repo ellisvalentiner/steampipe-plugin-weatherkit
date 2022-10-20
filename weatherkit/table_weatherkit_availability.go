@@ -7,6 +7,28 @@ import (
 	"github.com/turbot/steampipe-plugin-sdk/v4/plugin/transform"
 )
 
+func weatherKitAvailabilityColumns() []*plugin.Column {
+	return []*plugin.Column{
+		{
+			Name:        "latitude",
+			Type:        proto.ColumnType_DOUBLE,
+			Description: "A numeric value indicating the latitude of the coordinate between -90 and 90.",
+			Transform:   transform.FromQual("latitude"),
+		},
+		{
+			Name:        "longitude",
+			Type:        proto.ColumnType_DOUBLE,
+			Description: "A numeric value indicating the longitude of the coordinate between -180 and 180.",
+			Transform:   transform.FromQual("longitude"),
+		},
+		{
+			Name:        "data_set",
+			Type:        proto.ColumnType_STRING,
+			Description: "The collection of weather information for a location.",
+		},
+	}
+}
+
 func tableWeatherKitAvailability() *plugin.Table {
 	return &plugin.Table{
 		Name:        "weatherkit_availability",
@@ -15,25 +37,7 @@ func tableWeatherKitAvailability() *plugin.Table {
 			KeyColumns: plugin.AllColumns([]string{"latitude", "longitude"}),
 			Hydrate:    listAvailability,
 		},
-		Columns: []*plugin.Column{
-			{
-				Name:        "latitude",
-				Type:        proto.ColumnType_DOUBLE,
-				Description: "A numeric value indicating the latitude of the coordinate between -90 and 90.",
-				Transform:   transform.FromQual("latitude"),
-			},
-			{
-				Name:        "longitude",
-				Type:        proto.ColumnType_DOUBLE,
-				Description: "A numeric value indicating the longitude of the coordinate between -180 and 180.",
-				Transform:   transform.FromQual("longitude"),
-			},
-			{
-				Name:        "data_set",
-				Type:        proto.ColumnType_STRING,
-				Description: "The collection of weather information for a location.",
-			},
-		},
+		Columns: weatherKitAvailabilityColumns(),
 	}
 }
 
