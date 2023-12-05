@@ -4,7 +4,7 @@ go 1.19
 
 require (
 	github.com/golang-jwt/jwt v3.2.2+incompatible
-	github.com/hashicorp/go-hclog v1.5.0
+	github.com/hashicorp/go-hclog v1.6.1
 	github.com/turbot/steampipe-plugin-sdk/v4 v4.1.13
 )
 
