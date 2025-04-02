@@ -20,7 +20,7 @@ builds:
     binary: "{{ .ProjectName }}.plugin"
 
 archives:
-  - format: gz
+  - formats: [gz]
     name_template: "{{ .ProjectName }}_{{ .Os }}_{{ .Arch }}"
     files:
       - none*
